@@ -1,9 +1,10 @@
 #include "Form.hpp"
+#include "Bureaucrat.hpp"
 
 Form::Form()
 	: name("default form"), sign(false), signGrade(1), execGrade(1)
 {
-
+	std::cout << "Using this constructor is not recommended." << std::endl;
 }
 
 Form::Form(const std::string& name, int signGrade, int execGrade)
@@ -17,33 +18,32 @@ Form::Form(const std::string& name, int signGrade, int execGrade)
 
 Form::Form(const Form& origin)
 	: name(origin.name), sign(origin.sign), signGrade(origin.signGrade), execGrade(origin.execGrade)
-{
-
-}
+{}
 
 Form& Form::operator= (const Form& origin)
 {
+	std::cout << "Using this copy assignment operator is not recommended." << std::endl;
+	sign = origin.sign;
 
+	return *this;
 }
 
 Form::~Form()
-{
+{}
 
-}
-
-const std::string& Form::getName()
+const std::string& Form::getName() const
 {
 	return name;
 }
-bool Form::getSignStatus()
+bool Form::getSignStatus() const
 {
 	return sign;
 }
-int Form::getGradeSign()
+int Form::getGradeSign() const
 {
 	return signGrade;
 }
-int Form::getGradeExec()
+int Form::getGradeExec() const
 {
 	return execGrade;
 }
@@ -53,6 +53,7 @@ void Form::beSigned(Bureaucrat& b) // 무슨 exeception?
 	if (b.signForm(name, signGrade)) {
 		sign = true;
 	}
+	else throw Form::GradeTooLowException();
 }
 
 const char* Form::GradeTooLowException::what() const throw()

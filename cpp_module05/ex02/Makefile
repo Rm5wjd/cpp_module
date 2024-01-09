@@ -2,7 +2,7 @@ CC = c++
 CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
 NAME = a.out
-SRCS = main.cpp Bureaucrat.cpp Form.cpp
+SRCS = main.cpp Bureaucrat.cpp AForm.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 
