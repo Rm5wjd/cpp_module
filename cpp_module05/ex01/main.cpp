@@ -19,10 +19,10 @@ int main()
 	try
 	{
 		Bureaucrat b1("b1", 24);
-		Bureaucrat b2("b1", 1);
+		Bureaucrat b2("b2", 2);
 		//Bureaucrat b2("b2", 160);
 		Form form1("f1", 15, 10);
-		form1.beSigned(b2);
+		b1.signForm(form1);
 		//for (int i = 0; i < 200; i++)
 		//	b1.increment();
 

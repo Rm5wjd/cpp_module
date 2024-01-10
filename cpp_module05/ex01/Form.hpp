@@ -19,7 +19,7 @@ class Form
 		int getGradeSign() const;
 		int getGradeExec() const;
 
-		void beSigned(Bureaucrat& b);
+		bool beSigned(Bureaucrat& b);
 
 	private:
 		const std::string name;

@@ -21,6 +21,8 @@ class Bureaucrat
 		const std::string name;
 		int grade;
 
+		void checkGrade() const ;
+		
 		class GradeTooHighException : public std::exception
 		{
 			public:
@@ -31,7 +33,7 @@ class Bureaucrat
 		{
 			public:
 				const char* what() const throw();
-		}; 
+		};
 };
 
 # endif

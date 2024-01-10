@@ -48,17 +48,20 @@ int Form::getGradeExec() const
 	return execGrade;
 }
 
-void Form::beSigned(Bureaucrat& b) // 무슨 exeception?
+bool Form::beSigned(Bureaucrat& b) // 무슨 exeception?
 {
-	if (b.signForm(name, signGrade)) {
+	if (b.getGrade() <= signGrade) {
+		if (sign)
+			return false;
 		sign = true;
+		return true;
 	}
 	else throw Form::GradeTooLowException();
 }
 
 const char* Form::GradeTooLowException::what() const throw()
 {
-	return "Form GradeTooLowException";
+	return "Form's sign grade is high than bureaucrat's grade";
 }
 
 const char* Form::GradeTooHighException::what() const throw()
