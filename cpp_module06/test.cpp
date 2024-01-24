@@ -7,7 +7,7 @@ int main()
 	std::stringstream ss;
 	
 	std::string str;
-	str = "42.4f";
+	str = "inf";
 	
 	ss << str;
 	float f;
