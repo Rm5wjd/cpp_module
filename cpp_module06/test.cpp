@@ -7,15 +7,18 @@ int main()
 	std::stringstream ss;
 	
 	std::string str;
-	str = "inf";
+	str = "25122";
 	
 	ss << str;
 	float f;
 	int i;
 	char c;
 	double b;
-	ss >> f;
+	ss >> i;
 
+	c = static_cast<char>(i);
+	if (static_cast<double>(c) > 127)
+		std::cout << "ww" << std::endl;
 	if (ss.fail())
 		std::cout << "fail" << std::endl;
 	if (ss.good())
@@ -27,6 +30,6 @@ int main()
 
 	std::cout << f << std::endl;
 	std::cout << i << std::endl;
-	std::cout << c << std::endl;
+	std::cout << static_cast<int>(c) << std::endl;
 	std::cout << b << std::endl;
 }
