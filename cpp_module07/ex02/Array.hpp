@@ -2,20 +2,67 @@
 # define ARRAY_HPP
 
 #include <iostream>
+#include <stdexcept>
 
 template <typename T>
 class Array
 {
 	private:
-		unsigned int size;
+		T* arr;
+		int length;
 
 	public:
-		Array();
-		Array(unsigned int n);
-		Array(const Array& origin);
-		Array& operator= (const Array& origin);
-		void* operator new[](std::size_t )
-		~Array();
+		Array() : arr(new T[0]), length(0)
+		{}
+
+		Array(unsigned int n)
+		{
+			arr = new T[n];
+			length = n;
+
+			for (int i = 0; i < length; i++)
+				arr[i] = 0;
+		}
+
+		Array(const Array& origin)
+		{
+			length = origin.length;
+			arr = new T[length];
+			for (int i = 0; i < length; i++)
+				arr[i] = origin.arr[i];
+		}
+		
+		Array& operator= (const Array& origin)
+		{
+			if (arr)
+				delete[] arr;
+
+			length = origin.length;
+			arr = new T[length];
+			for (int i = 0; i < length; i++)
+				arr[i] = origin.arr[i];
+		}
+
+		T& operator[] (int idx) {
+			if (idx < 0 || length <= idx)
+				throw std::out_of_range("idx out of range");
+			return arr[idx];
+		}
+
+		T operator[] (int idx) const {
+			if (idx < 0 || length <= idx)
+				throw std::out_of_range("idx out of range");
+			return arr[idx];
+		}
+
+		int size() const {
+			return length;
+		}
+
+		~Array()
+		{
+			delete[] arr;
+		}
 };
 
 
