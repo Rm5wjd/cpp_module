@@ -8,8 +8,9 @@ class Span
 {
 	private:
 		std::vector<int> cont;
-		int size;
-		int capacity;
+		unsigned int size;
+		unsigned int capacity;
+		static bool seeded;
 	public:
 		Span();
 		Span(unsigned int n);

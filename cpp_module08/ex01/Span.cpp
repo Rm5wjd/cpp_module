@@ -2,6 +2,8 @@
 
 int createRandValue();
 
+bool Span::seeded = false;
+
 Span::Span()
 	: size(0), capacity(0)
 {
@@ -19,12 +21,12 @@ Span::Span(const Span& origin)
 	*this = origin;
 }
 
-Span& Span::operator= (const Span& origin)
+Span& Span::operator=(const Span& origin)
 {
 	size = origin.size;
 	capacity = origin.capacity;
 
-	for (int i = 0; i < capacity; i++) {
+	for (unsigned int i = 0; i < capacity; i++) {
 		cont[i] = origin.cont[i];
 	}
 
@@ -52,7 +54,7 @@ int Span::shortestSpan()
 	std::sort(cont.begin(), cont.end());
 
 	int min = INT_MAX;
-	for (int i = 0; i < size - 1; i++) {
+	for (unsigned int i = 0; i < size - 1; i++) {
 		if (cont[i + 1] - cont[i] < min)
 			min = cont[i + 1] - cont[i];
 	}
@@ -71,20 +73,32 @@ int Span::longestSpan()
 
 void Span::addManyNumber(unsigned int n)
 {
-	std::srand(unsigned(std::time(0)));
+	if (!seeded)
+	{
+		std::srand(unsigned(std::time(0)));
+		seeded = true;
+	}
+
+	if (static_cast<unsigned long long int>(size) + n > capacity)
+		throw std::runtime_error("Size is over");
+
+	cont.resize(size + n);
 	
-	for (int i = 0; i < static_cast<int>(n); i++)
-		cont.push_back(0);
-	
-	std::generate(cont.begin(), cont.end(), createRandValue);
+	std::generate(cont.begin() + size, cont.end(), createRandValue);
 	size += n;
 
-	for (int i = 0; i < 10; i++)
-		std::cout << "cont:" << cont[i] << std::endl;
+	//for (int i = 0; i < 10; i++)
+	//	std::cout << "cont:" << cont[i] << std::endl;
+
+	//std::cout << "cont size:" << cont.size() << std::endl;
+	//std::cout << "span size:" << size << std::endl;
+	//std::cout << cont.capacity() << std::endl;
+	//for (int i = 0; i < static_cast<int>(n); i++)
+	//	cont.push_back(0);
 }
 
 int createRandValue()
 {
-	int randValue = std::rand() % 1000;
+	int randValue = std::rand();
 	return randValue;
 }
