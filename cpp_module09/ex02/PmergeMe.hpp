@@ -4,23 +4,30 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <list>
+#include <deque>
 
 class PmergeMe
 {
 	private:
+		int jacobstal_num[20];
+		
+		void insertion(std::vector<int>& main_chain, std::vector< std::pair<int, int> >& arr);
+		void insertion(std::deque<int>& main_chain, std::deque< std::pair<int, int> >& arr);
+
+		std::vector<int> ford_johnson(std::vector< std::pair<int, int> > &arr);
+		std::deque<int> ford_johnson(std::deque< std::pair<int, int> > &arr);
+
+		int binary_search(std::vector<int> main_chain, int target, int search_idx);
+		int binary_search(std::deque<int> main_chain, int target, int search_idx);
 		
 	public:
-	
-	/*
-		1. 인자로 배열을 받는다.
-		2. 메인체인, 서브체인 배열을 만든다.
-		3. 메인체인은 재귀로 다시 포드존슨 인자로 넣어준다.
-		4. 서브체인의 삽입을 시작한다.
-			재귀 종료조건 : 메인체인의 원소가 하나일 때?
-		
-		point: 아마 재귀로 내려가는 도중 바뀌는 mainchain의 순서를 벡터로 실시간 스왑해야되는듯 (재귀 스택마다 같은 벡터를 컨트롤)
-	*/
+		PmergeMe();
+		PmergeMe(const PmergeMe& origin);
+		PmergeMe& operator= (const PmergeMe& origin);
+		~PmergeMe();
+
+		void sort(std::vector<int> &arr);
+		void sort(std::deque<int> &arr);
 };
 
 # endif

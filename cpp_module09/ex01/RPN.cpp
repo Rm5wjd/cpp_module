@@ -29,6 +29,7 @@ void RPN::convert(std::string& notation)
 {
 	std::stringstream ss(notation);
 	std::string token;
+	bool op_flag = false;
 
 	while (!ss.eof())
 	{
@@ -42,8 +43,10 @@ void RPN::convert(std::string& notation)
 		char c = token[0];
 		// std::cout << c << std::endl;
 
-		if (isNumber(c))
+		if (isNumber(c)) {
 			this->stk.push(c - '0');
+			op_flag = false;
+		}
 		else
 		{
 			if (!isOperator(c)) {
@@ -51,17 +54,21 @@ void RPN::convert(std::string& notation)
 				return;
 			}
 			
-			if (this->stk.size() < 2) {
+			if (this->stk.size() != 2) {
 				std::cout << "Error" << std::endl;
 				return;
 			}
-			
+
 			int num1 = this->stk.top();
 			this->stk.pop();
 
 			int num2 = this->stk.top();
 			this->stk.pop();
 
+			if (c == '/' && num1 == 0) {
+				std::cout << "Error" << std::endl;
+				return;
+			}
 			// std::cout << num1 << ' ' << num2 << std::endl;
 
 			switch (c)
@@ -81,10 +88,15 @@ void RPN::convert(std::string& notation)
 				default:
 					break;
 			}
+
+			op_flag = true;
 		}
 	}
-
-	std::cout << this->stk.top() << std::endl;
+	
+	if (op_flag)
+		std::cout << this->stk.top() << std::endl;
+	else
+		std::cout << "Error" << std::endl;
 }
 
 static bool isNumber(char c)

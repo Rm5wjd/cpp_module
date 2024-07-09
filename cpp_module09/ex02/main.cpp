@@ -1,134 +1,86 @@
 #include "PmergeMe.hpp"
-
-int jacobstal_num[100] = {0, 1, 1};
-
-void make_jacobs_num();
-int binary_search(std::vector<int> main_chain, int target, int search_idx);
+#include <algorithm> // delete 삭제 임시 tmp temp
+#include <ctime>
 
 int main(int argc, char *argv[])
 {
-	std::vector<std::pair<int, int>> vec;
+	PmergeMe pmergeme;
+	int num;
 
 	if (argc == 1) {
 		std::cout << "Error" << std::endl;
 		return 1;
 	}
 
-	int *arr = new int[argc];
+	std::vector<int> arr_vec;
+	std::deque<int> arr_deque;
+	std::vector<int> to_compare;
 
-	for (int i = 1; i < argc; i++)
+	for (int i = 0; i < argc; i++)
 	{
-		arr[i] = std::atoi(argv[i]);
+		if (i + 1 == argc)
+			break;
+		
+		num = std::atoi(argv[i + 1]);
+		if (num < 0) {
+			std::cout << "Error" << std::endl;
+			return 1;
+		}
+		arr_vec.push_back(num);
+		arr_deque.push_back(num);
+		to_compare.push_back(num);
 	}
 
-	make_jacobs_num();
-}
-
-std::vector<int> ford_johnson(std::vector<std::pair<int, int>> arr, std::vector<std::pair<int, int>> mov_info)
-{
-	int last_num;
-	std::vector<int> main_chain;
-
-	for (int i = 0; i < arr.size(); i++)
+	std::cout << "Before: ";
+	for (size_t i = 0; i < arr_vec.size(); i++)
 	{
-		main_chain.push_back(arr[i].first);
+		std::cout << arr_vec[i] << " ";
 	}
+	std::cout << std::endl;
 
-	// return 조건
-	if (main_chain.size() == 1) {
-		return main_chain;
-	}
+	clock_t vec_start = std::clock();
+	pmergeme.sort(arr_vec);
+	clock_t vec_end = std::clock();
 
-	if (main_chain.size() % 2 != 0) {
-		last_num = main_chain.back();
-		main_chain.pop_back();
-	}
+	clock_t deque_start = std::clock();
+	pmergeme.sort(arr_deque);
+	clock_t deque_end = std::clock();
 
-	std::vector<std::pair<int, int>> new_arr;
+	//std::cout << "\n\n---------------------------------------------------------------------------------\n";
+	//for (size_t i = 0; i < arr_vec.size(); i++)
+	//	std::cout << arr_vec[i] << " ";
+	//std::cout << std::endl;
 
-	for (int i = 0; i < arr.size() - 1; i += 2)
-	{
-		std::pair<int, int> elem = {std::max(main_chain[i], main_chain[i + 1]), \
-									std::min(main_chain[i], main_chain[i + 1])};
-		new_arr.push_back(elem);
-	}
+	//std::cout << "\n\n---------------------------------------------------------------------------------\n";
+	//for (size_t i = 0; i < arr_deque.size(); i++)
+	//	std::cout << arr_deque[i] << " ";
+	//std::cout << std::endl;
+
+	std::sort(to_compare.begin(), to_compare.end());
 	
-	// 재귀 들어가기 전 index 정보 담기
-	for (int i = 0; i < new_arr.size(); i++)
-	{
-		mov_info.push_back(std::make_pair(new_arr[i].first, i));
-	}
+	std::cout << "After:  ";
+	for (size_t i = 0; i < arr_vec.size(); i++)
+		std::cout << arr_vec[i] << " ";
+	std::cout << std::endl;
 
-	// recursion!
-	main_chain = ford_johnson(new_arr, mov_info);
+	clock_t vec_exec_time = vec_end - vec_start;
+	double vec_time = ((double)vec_exec_time / CLOCKS_PER_SEC);
+	std::cout << "Time to process a range of " << argc - 1 << " elements with std::vector : " << vec_time << " us" << std::endl;
 
-	// sub_chain 복원
-	for (int i = 0; i < mov_info.size(); i++)
-	{
-		std::swap(new_arr[mov_info[i].first], new_arr[mov_info[i].second]);
-	}
+	clock_t deque_exec_time = deque_end - deque_start;
+	double deque_time = ((double)deque_exec_time / CLOCKS_PER_SEC);
+	std::cout << "Time to process a range of " << argc - 1 << " elements with std::deque : " << deque_time << " us" << std::endl;
 
-	// insertion
-	int next;
-	int prev_jacob = 0;
-	int jacob_idx = 2;
-	int search_idx;
-	int size = new_arr.size();
-	int j = 0;
-
-	while (j <= size)
-	{
-		next = jacobstal_num[jacob_idx];
-		int target = new_arr[next].second;
-
-		while (next > prev_jacob)
-		{
-			for (int i = 0; i < main_chain.size(); i++) {
-				if (main_chain[i] == new_arr[next].first) {
-					search_idx = i - 1;
-					break;
-				}
-			}
-
-			int des_idx = binary_search(main_chain, target, search_idx);
-			main_chain.insert(main_chain.begin() + des_idx, 1, target);
-
-			next--;
-			j++;
+	for (size_t i = 0; i < arr_vec.size(); i++) {
+		if (arr_vec[i] != to_compare[i]) {
+			printf("ERROR\n");
+			printf("vec_index: %lu\n", i);
+			return 1;
 		}
-		
-		prev_jacob = jacobstal_num[jacob_idx];
-		jacob_idx++;
-	}
-
-	// 리턴 전에 바뀐 인덱스 정보 담기
-}
-
-void make_jacobs_num()
-{
-	for (int i = 3; i < 100; i++)
-	{
-		jacobstal_num[i] = jacobstal_num[i - 1] + (2 * jacobstal_num[i - 2]);
-	}
-}
-
-int binary_search(std::vector<int> main_chain, int target, int search_idx)
-{
-	int left = 0;
-	int right =  search_idx;
-	int mid;
-
-	while (left <= right)
-	{
-		mid = (left + right) / 2;
-		
-		if (main_chain[mid] < target) {
-			left = mid + 1;
-		}
-		else {
-			right = mid - 1;
+		else if (arr_deque[i] != to_compare[i]) {
+			printf("ERROR\n");
+			printf("deque_index: %lu\n", i);
+			return 1;
 		}
 	}
-
-	return mid;
 }

@@ -99,29 +99,39 @@ static bool checkDate(const std::string& date)
 	std::getline(ss, ymd[2], ' ');
 
 	if (!isNumber(ymd[0]) || !isNumber(ymd[1]) || !isNumber(ymd[2]))
-        return false;
+		return false;
 	// 01, 1 자릿수도 구분해야되나?
 
 	int year = std::atoi(ymd[0].c_str());
 	int month = std::atoi(ymd[1].c_str());
-    int day = std::atoi(ymd[2].c_str());
+	int day = std::atoi(ymd[2].c_str());
 
-    if (month < 1 || month > 12)
-        return false;
+	if (month < 1 || month > 12)
+		return false;
 
-    // 월별 일수 확인
-    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	// 월별 일수 확인
+	int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-    // 윤년 계산
-    if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
-        daysInMonth[1] = 29; // 2월 일수 수정
-    }
+	// 윤년 계산
+	if (year % 4 == 0) {
+		if (year % 100 == 0) {
+			if (year % 400 == 0) {
+				daysInMonth[1] = 29; // 2월 일수 수정
+			}
+		}
+		else {
+			daysInMonth[1] = 29; // 2월 일수 수정
+		}
+	}
+	//if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+	//	daysInMonth[1] = 29; // 2월 일수 수정
+	//}
 
-    // 일이 해당 월의 최대 일수 범위 내에 있는지 확인
-    if (day < 1 || day > daysInMonth[month - 1])
-        return false;
+	// 일이 해당 월의 최대 일수 범위 내에 있는지 확인
+	if (day < 1 || day > daysInMonth[month - 1])
+		return false;
 
-    return true;
+	return true;
 }
 
 static bool checkValue(const std::string& value)
