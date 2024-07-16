@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	std::vector<int> arr_vec;
-	std::deque<int> arr_deque;
+	std::vector<t_valAndIdx> arr_vec;
+	std::deque<t_valAndIdx> arr_deque;
 	std::vector<int> to_compare;
 
 	for (int i = 0; i < argc; i++)
@@ -26,15 +26,16 @@ int main(int argc, char *argv[])
 			std::cout << "Error" << std::endl;
 			return 1;
 		}
-		arr_vec.push_back(num);
-		arr_deque.push_back(num);
+		t_valAndIdx elem = {num, i};
+		arr_vec.push_back(elem);
+		arr_deque.push_back(elem);
 		to_compare.push_back(num);
 	}
 
 	std::cout << "Before: ";
 	for (size_t i = 0; i < arr_vec.size(); i++)
 	{
-		std::cout << arr_vec[i] << " ";
+		std::cout << arr_vec[i].value << " ";
 	}
 	std::cout << std::endl;
 
@@ -46,21 +47,11 @@ int main(int argc, char *argv[])
 	pmergeme.sort(arr_deque);
 	clock_t deque_end = std::clock();
 
-	//std::cout << "\n\n---------------------------------------------------------------------------------\n";
-	//for (size_t i = 0; i < arr_vec.size(); i++)
-	//	std::cout << arr_vec[i] << " ";
-	//std::cout << std::endl;
-
-	//std::cout << "\n\n---------------------------------------------------------------------------------\n";
-	//for (size_t i = 0; i < arr_deque.size(); i++)
-	//	std::cout << arr_deque[i] << " ";
-	//std::cout << std::endl;
-
 	std::sort(to_compare.begin(), to_compare.end());
 	
 	std::cout << "After:  ";
 	for (size_t i = 0; i < arr_vec.size(); i++)
-		std::cout << arr_vec[i] << " ";
+		std::cout << arr_vec[i].value << " ";
 	std::cout << std::endl;
 
 	clock_t vec_exec_time = vec_end - vec_start;
@@ -72,14 +63,10 @@ int main(int argc, char *argv[])
 	std::cout << "Time to process a range of " << argc - 1 << " elements with std::deque : " << deque_time << " us" << std::endl;
 
 	for (size_t i = 0; i < arr_vec.size(); i++) {
-		if (arr_vec[i] != to_compare[i]) {
+		if (arr_vec[i].value != to_compare[i] || arr_deque[i].value != to_compare[i]) {
 			printf("ERROR\n");
 			printf("vec_index: %lu\n", i);
-			return 1;
-		}
-		else if (arr_deque[i] != to_compare[i]) {
-			printf("ERROR\n");
-			printf("deque_index: %lu\n", i);
+			printf("value: %d %d\n", arr_vec[i].value, to_compare[i]);
 			return 1;
 		}
 	}

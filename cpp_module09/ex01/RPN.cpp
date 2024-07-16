@@ -40,7 +40,6 @@ void RPN::convert(std::string& notation)
 		}
 
 		char c = token[0];
-		// std::cout << c << std::endl;
 
 		if (isNumber(c)) {
 			this->stk.push(c - '0');
@@ -67,7 +66,6 @@ void RPN::convert(std::string& notation)
 				std::cout << "Error" << std::endl;
 				return;
 			}
-			// std::cout << num1 << ' ' << num2 << std::endl;
 
 			switch (c)
 			{
